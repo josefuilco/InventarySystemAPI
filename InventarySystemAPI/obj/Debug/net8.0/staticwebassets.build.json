@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "vQ31NvwrKoQmPDdVOUDcp0GXSD/cX5h9WSV29y+KX0M=",
+  "Source": "InventarySystemAPI",
+  "BasePath": "_content/InventarySystemAPI",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
