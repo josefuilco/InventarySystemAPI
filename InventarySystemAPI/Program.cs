@@ -1,4 +1,7 @@
 using InventarySystemAPI.Context;
+using InventarySystemAPI.Modules.Authentication.Application;
+using InventarySystemAPI.Modules.Authentication.Domain.Interfaces;
+using InventarySystemAPI.Modules.Authentication.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
@@ -15,9 +18,14 @@ builder.Services.AddCors(policy => {
 builder.Services.AddControllers()
     .AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
 // Add DbContext
-builder.Services.AddDbContextPool<InventarySystemAPIContext>(options => {
+builder.Services.AddDbContextPool<InventarySystemContext>(options => {
     options.UseSqlServer(builder.Configuration.GetConnectionString("Connection"));
 });
+
+// Add Dependency Inversion - Auth Module
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+
 // Swagger UI
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -27,7 +35,7 @@ var app = builder.Build();
 // Scoped Database
 using (var scoped = app.Services.CreateScope())
 {
-    var context = scoped.ServiceProvider.GetRequiredService<InventarySystemAPIContext>();
+    var context = scoped.ServiceProvider.GetRequiredService<InventarySystemContext>();
     context.Database.EnsureCreated();
     context.Database.Migrate();
 }
@@ -40,7 +48,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors(MyAllowSpecificOrigins);
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 app.MapControllers();
 
 app.Run();
